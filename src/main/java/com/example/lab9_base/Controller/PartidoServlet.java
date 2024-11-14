@@ -31,13 +31,13 @@ public class PartidoServlet extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         response.setContentType("text/html");
         String action = request.getParameter("action") == null ? "lista" : request.getParameter("action");
-        RequestDispatcher view;
+
         DaoPartidos daoPartidos = new DaoPartidos();
         switch (action) {
             case "lista":
                 ArrayList<Partido> list = daoPartidos.listaDePartidos();
                 request.setAttribute("lista", list);
-                view = request.getRequestDispatcher("index.jsp");
+                RequestDispatcher view = request.getRequestDispatcher("1.jsp");
                 view.forward(request, response);
                 break;
             case "crear":

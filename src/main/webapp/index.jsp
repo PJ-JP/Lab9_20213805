@@ -1,4 +1,6 @@
+<%@ page import="com.example.lab9_base.Bean.Partido" %>
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
+<jsp:useBean id="lista" scope="request" type="java.util.ArrayList<com.example.lab9_base.Bean.Partido>"/>
 <!DOCTYPE html>
 <html>
     <head>
@@ -26,17 +28,16 @@
                     <th>Estadio a jugar</th>
                     <th>Árbitro</th>
                 </tr>
-
+                <%for (Partido partido : lista) {%>
                 <tr>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
+                    <td><%=partido.getNumeroJornada()%></td>
+                    <td><%=partido.getFecha()%></td>
+                    <td><%=partido.getSeleccionLocal().getNombre()%></td>
+                    <td><%=partido.getSeleccionVisitante().getNombre()%></td>
+                    <td><%=partido.getSeleccionLocal().getEstadio().getNombre()%></td>
+                    <td><%=partido.getArbitro().getNombre()%></td>
                 </tr>
-
+                <%}%>
             </table>
         </div>
         <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>

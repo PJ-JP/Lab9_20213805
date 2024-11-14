@@ -1,16 +1,45 @@
 package com.example.lab9_base.Dao;
 
-import com.example.lab9_base.Bean.Partido;
+import com.example.lab9_base.Bean.*;
 
 import java.util.ArrayList;
+import com.example.lab9_base.Bean.Partido;
 
-public class DaoPartidos {
+import java.sql.*;
+
+
+public class DaoPartidos extends DaoBase{
     public ArrayList<Partido> listaDePartidos() {
 
         ArrayList<Partido> partidos = new ArrayList<>();
-        /*
-        Inserte su código aquí
-        */
+
+        try (Connection conn = this.getConnection();
+             Statement stmt = conn.createStatement();
+             ResultSet rs = stmt.executeQuery("select p.numeroJornada,p.fecha,s.nombre,v.nombre,e.nombre,a.nombre from partido p, seleccion s, estadio e,arbitro a,seleccion v where s.idSeleccion=p.seleccionLocal and s.estadio_idEstadio=e.idEstadio and a.idArbitro=p.arbitro and v.idSeleccion=p.seleccionVisitante;");) {
+
+            while (rs.next()) {
+                Partido partido = new Partido();
+                SeleccionNacional seleccionLocal = new SeleccionNacional();
+                Estadio estadio = new Estadio();
+                SeleccionNacional seleccionVisitante = new SeleccionNacional();
+                Arbitro arbitro = new Arbitro();
+                partido.setNumeroJornada(rs.getInt(1));
+                partido.setFecha(rs.getString(2));
+                seleccionLocal.setNombre(rs.getString(3));
+                seleccionVisitante.setNombre(rs.getString(4));
+                partido.setSeleccionVisitante(seleccionVisitante);
+                estadio.setNombre(rs.getString(5));
+                seleccionLocal.setEstadio(estadio);
+                partido.setSeleccionLocal(seleccionLocal);
+                arbitro.setNombre(rs.getString(6));
+                partido.setArbitro(arbitro);
+                partidos.add(partido);
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
         return partidos;
     }
 
