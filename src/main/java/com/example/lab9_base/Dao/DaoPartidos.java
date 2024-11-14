@@ -15,7 +15,7 @@ public class DaoPartidos extends DaoBase{
 
         try (Connection conn = this.getConnection();
              Statement stmt = conn.createStatement();
-             ResultSet rs = stmt.executeQuery("select p.numeroJornada,p.fecha,s.nombre,v.nombre,e.nombre,a.nombre from partido p, seleccion s, estadio e,arbitro a,seleccion v where s.idSeleccion=p.seleccionLocal and s.estadio_idEstadio=e.idEstadio and a.idArbitro=p.arbitro and v.idSeleccion=p.seleccionVisitante;");) {
+             ResultSet rs = stmt.executeQuery("select p.idPartido,p.numeroJornada,p.fecha,s.nombre,v.nombre,e.nombre,a.nombre from partido p, seleccion s, estadio e,arbitro a,seleccion v where s.idSeleccion=p.seleccionLocal and s.estadio_idEstadio=e.idEstadio and a.idArbitro=p.arbitro and v.idSeleccion=p.seleccionVisitante;");) {
 
             while (rs.next()) {
                 Partido partido = new Partido();
@@ -23,15 +23,16 @@ public class DaoPartidos extends DaoBase{
                 Estadio estadio = new Estadio();
                 SeleccionNacional seleccionVisitante = new SeleccionNacional();
                 Arbitro arbitro = new Arbitro();
-                partido.setNumeroJornada(rs.getInt(1));
-                partido.setFecha(rs.getString(2));
-                seleccionLocal.setNombre(rs.getString(3));
-                seleccionVisitante.setNombre(rs.getString(4));
+                partido.setIdPartido(rs.getInt(1));
+                partido.setNumeroJornada(rs.getInt(2));
+                partido.setFecha(rs.getString(3));
+                seleccionLocal.setNombre(rs.getString(4));
+                seleccionVisitante.setNombre(rs.getString(5));
                 partido.setSeleccionVisitante(seleccionVisitante);
-                estadio.setNombre(rs.getString(5));
+                estadio.setNombre(rs.getString(6));
                 seleccionLocal.setEstadio(estadio);
                 partido.setSeleccionLocal(seleccionLocal);
-                arbitro.setNombre(rs.getString(6));
+                arbitro.setNombre(rs.getString(7));
                 partido.setArbitro(arbitro);
                 partidos.add(partido);
             }
