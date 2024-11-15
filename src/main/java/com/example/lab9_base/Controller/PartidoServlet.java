@@ -53,7 +53,7 @@ public class PartidoServlet extends HttpServlet {
                         break;
                     }
                 }
-                /*Validación no pedida?: El árbitro no puede ser del mismo país que de las seleeciones que juegan*/
+                /*Validación no pedida?: El árbitro no puede ser del mismo país que de las selecciones que juegan*/
                 String paisLocal = daoPartidos.paisSeleccion(idLocal);
                 String paisVisitante = daoPartidos.paisSeleccion(idVisitante);
                 Arbitro arbitroMapeado = daoArbitros.buscarArbitro(idArbitro);
