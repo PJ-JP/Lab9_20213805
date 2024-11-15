@@ -30,7 +30,25 @@ public class PartidoServlet extends HttpServlet {
                 int idLocal= Integer.parseInt(request.getParameter("local"));
                 int idVisitante= Integer.parseInt(request.getParameter("visitante"));
                 int idArbitro = Integer.parseInt(request.getParameter("arbitro"));
-
+                boolean flag=idLocal!=idVisitante;
+                /*En esta parte se hace la valiación: Ningún partido se puede repetir POR JORNADA (según entiendo del funcionamiento de las clasificatorias)*/
+                ArrayList<Partido> historial = daoPartidos.listaPartidosJornada(numeroJornada);
+                boolean flag1 = true;
+                if(!(historial.isEmpty())){
+                    for (Partido p : historial) {
+                        if((p.getSeleccionLocal().getIdSeleccion() == idLocal && p.getSeleccionVisitante().getIdSeleccion() == idVisitante)||(p.getSeleccionLocal().getIdSeleccion()==idVisitante && p.getSeleccionVisitante().getIdSeleccion()==idLocal)){
+                            flag1=false;
+                            break;
+                        }
+                    }
+                }
+                /*Validación no pedida?: El árbitro no puede ser del mismo país que de las selecciones que juegan*/
+                String paisLocal = daoPartidos.paisSeleccion(idLocal);
+                String paisVisitante = daoPartidos.paisSeleccion(idVisitante);
+                Arbitro arbitroMapeado = daoArbitros.buscarArbitro(idArbitro);
+                String paisArbitro = arbitroMapeado.getPais();
+                boolean flag2= !(paisLocal.equals(paisArbitro)||paisVisitante.equals(paisArbitro));
+                /*Con las flag guardadas ahora creo el partido*/
                 Partido partido = new Partido();
                 partido.setNumeroJornada(numeroJornada);
                 partido.setFecha(fecha);
@@ -43,25 +61,8 @@ public class PartidoServlet extends HttpServlet {
                 Arbitro arbitro  = new Arbitro();
                 arbitro.setIdArbitro(idArbitro);
                 partido.setArbitro(arbitro);
-
-                /*En esta parte se hace la valiación: Ningún partido se puede repetir POR JORNADA (según entiendo del funcionamiento de las clasificatorias)*/
-                ArrayList<Partido> historial = daoPartidos.listaDePartidos();
-                boolean flag1 = true;
-                for (Partido p : historial) {
-                    if((p.getSeleccionLocal().getIdSeleccion() == idLocal && p.getSeleccionVisitante().getIdSeleccion() == idVisitante)||(p.getSeleccionLocal().getIdSeleccion()==idVisitante && p.getSeleccionVisitante().getIdSeleccion()==idLocal)){
-                        flag1=false;
-                        break;
-                    }
-                }
-                /*Validación no pedida?: El árbitro no puede ser del mismo país que de las selecciones que juegan*/
-                String paisLocal = daoPartidos.paisSeleccion(idLocal);
-                String paisVisitante = daoPartidos.paisSeleccion(idVisitante);
-                Arbitro arbitroMapeado = daoArbitros.buscarArbitro(idArbitro);
-                String paisArbitro = arbitroMapeado.getPais();
-                boolean flag2= paisLocal.equals(paisArbitro) || paisVisitante.equals(paisArbitro);
-
                 /*Validaciones: El local y el visitante no serán la misma seleccion*/
-                if (idLocal!=idVisitante && flag1 && flag2) {
+                if (flag && flag1 && flag2) {
                     daoPartidos.crearPartido(partido);
                     response.sendRedirect(request.getContextPath()+"/PartidoServlet");
                 }

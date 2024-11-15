@@ -64,11 +64,41 @@ public class DaoPartidos extends DaoBase{
              PreparedStatement pstmt = conn.prepareStatement("select nombre from seleccion where idSeleccion=?;");) {
             pstmt.setInt(1,id);
             try(ResultSet rs = pstmt.executeQuery()){
-                pais=rs.getString(1);
+                while (rs.next()) {
+                    pais = rs.getString(1);
+                }
             }
         } catch (SQLException e) {
             e.printStackTrace();
         }
         return pais;
+    }
+    public ArrayList<Partido> listaPartidosJornada(int numeroJornada){
+        ArrayList<Partido> partidos = new ArrayList<>();
+        String sql = "select * from partido where numeroJornada=?;";
+        try (Connection conn = this.getConnection();
+             PreparedStatement pstmt = conn.prepareStatement(sql);) {
+            pstmt.setInt(1,numeroJornada);
+            try(ResultSet rs = pstmt.executeQuery()){
+                while (rs.next()) {
+                    Partido partido = new Partido();
+                    SeleccionNacional seleccionLocal = new SeleccionNacional();
+                    SeleccionNacional seleccionVisitante = new SeleccionNacional();
+                    Arbitro arbitro = new Arbitro();
+                    partido.setIdPartido(rs.getInt(1));
+                    seleccionLocal.setIdSeleccion(rs.getInt(2));
+                    seleccionVisitante.setIdSeleccion(rs.getInt(3));
+                    partido.setSeleccionLocal(seleccionLocal);
+                    partido.setSeleccionVisitante(seleccionVisitante);
+                    arbitro.setIdArbitro(rs.getInt(4));
+                    partido.setArbitro(arbitro);
+                    partido.setFecha(rs.getString(5));
+                    partidos.add(partido);
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return partidos;
     }
 }

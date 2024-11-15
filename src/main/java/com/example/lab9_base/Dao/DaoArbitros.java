@@ -89,9 +89,11 @@ public class DaoArbitros extends DaoBase{
              PreparedStatement pstmt = conn.prepareStatement(sql);) {
             pstmt.setInt(1,id);
             try(ResultSet rs = pstmt.executeQuery()){
-                arbitro.setIdArbitro(rs.getInt(1));
-                arbitro.setNombre(rs.getString(2));
-                arbitro.setPais(rs.getString(3));
+                while (rs.next()) {
+                    arbitro.setIdArbitro(rs.getInt(1));
+                    arbitro.setNombre(rs.getString(2));
+                    arbitro.setPais(rs.getString(3));
+                }
             }
         } catch (SQLException e) {
             e.printStackTrace();
