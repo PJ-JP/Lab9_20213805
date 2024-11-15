@@ -1,4 +1,8 @@
+<%@ page import="com.example.lab9_base.Bean.Arbitro" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<jsp:useBean id="lista" type="java.util.ArrayList<com.example.lab9_base.Bean.Arbitro>" scope="request"/>
+<jsp:useBean id="opciones" type="java.util.ArrayList<java.lang.String>" scope="request" />
+<%--jsp:useBean id="buscar" type="java.lang.String" scope="request" /--%>
 <html>
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
@@ -7,6 +11,7 @@
     </head>
     <body>
         <div class='container'>
+            <jsp:include page="/includes/navbar.jsp"/>
             <div class="row mb-5 mt-4">
                 <div class="col-lg-6">
                     <h1 class=''>Lista de Árbitros</h1>
@@ -18,11 +23,13 @@
                 <form method="post" action="<%= request.getContextPath()%>/ArbitroServlet?action=buscar" class="row">
                     <div class="col-lg-3">
                         <select name="tipo" class="form-control">
-                            <%--                    ACA DEBE COLOCAR LA LISTA DE OPCIONES MOSTRADAS EN EL SERVLET--%>
+                            <%for (String opcion : opciones){%>
+                            <option value="<%=opcion%>"><%=opcion%></option>
+                            <%}%>
                         </select>
                     </div>
                     <div class="col-lg-5">
-                        <input type="text" class="form-control" name="buscar">
+                        <input type="text" class="form-control" name="buscar" value="<%= request.getAttribute("busqueda") != null ? request.getAttribute("busqueda") : "" %>">
                     </div>
                     <div class="col-lg-2">
                         <button type="submit" class="btn btn-primary">Buscar</button>
@@ -40,16 +47,18 @@
                     <th>Pais</th>
                     <th></th>
                 </tr>
+                <%for (Arbitro arbitro: lista) {%>
                 <tr>
-                    <td></td>
-                    <td></td>
-                    <td></td>
+                    <td><%=arbitro.getIdArbitro()%></td>
+                    <td><%=arbitro.getNombre()%></td>
+                    <td><%=arbitro.getPais()%></td>
                     <td>
-                        <a href="<%=request.getContextPath()%>/ArbitroServlet?action=borrar&id=">
+                        <a href="<%=request.getContextPath()%>/ArbitroServlet?action=borrar&id=<%=arbitro.getIdArbitro()%>">
                             Borrar
                         </a>
                     </td>
                 </tr>
+                <%}%>
             </table>
         </div>
         <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"

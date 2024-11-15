@@ -10,12 +10,13 @@
     </head>
     <body>
         <div class='container'>
+            <jsp:include page="includes/navbar.jsp"/>
             <div class="row mb-5 mt-4">
                 <div class="col-lg-6">
                     <h1 class=''>Lista de Partidos</h1>
                 </div>
                 <div class="col-lg-6 my-auto text-lg-right">
-                    <a href="<%= request.getContextPath()%>/PartidoServlet?action=crear" class="btn btn-primary">Crear Partido</a>
+                    <a href="<%=request.getContextPath()%>/PartidoServlet?action=crear" class="btn btn-primary">Crear Partido</a>
                 </div>
             </div>
             <table class="table">
